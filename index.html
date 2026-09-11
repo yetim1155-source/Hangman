@@ -1,0 +1,258 @@
+#include <stdio.h>
+
+// Function prototypes
+
+int get_guess_word(char lib[][15], char word[]);
+int check_guess(char word[], char guess_res[], char guess, int len);
+int check_win(char guess_res[], int len);
+void winLose(int won);
+
+int main()
+{
+    printf("Welcome to Piezoelectric Hangman!\n");
+    printf("You will choose a word from the library.\n");
+    printf("You have 3 incorrect guesses before you lose.\n\n");
+
+    // Word library
+
+    char lib[10][15] = {
+        {'b', 'i', 'r', 'd', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'p', 'i', 'e', 'z', 'o', 'e', 'l', 'e', 'c', 't', 'r', 'i', 'c', '-', '-'},
+        {'s', 'w', 'a', 'n', 's', 'o', 'n', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'d', 'i', 'p', 'o', 'l', 'e', '-', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'g', 'e', 'n', 'i', 'u', 's', '-', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'t', 'h', 'u', 'n', 'd', 'e', 'r', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'s', 'u', 's', 't', 'a', 'i', 'n', 'a', 'b', 'i', 'l', 'i', 't', 'y', '-'},
+        {'a', 'c', 't', 'u', 'a', 't', 'o', 'r', '-', '-', '-', '-', '-', '-', '-'},
+        {'p', 'l', 'a', 'n', 'e', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'},
+        {'t', 'u', 'n', 'n', 'e', 'l', '-', '-', '-', '-', '-', '-', '-', '-', '-'}
+    };
+
+    char again;
+
+    // Allows the player to play multiple games
+
+    do
+    {
+        char word[15];
+
+        // Get the word and its length
+
+        int len = get_guess_word(lib, word);
+
+        // Create hidden version of the word
+
+        char guess_output[15];
+
+        for (int i = 0; i < len; i++)
+        {
+            guess_output[i] = '-';
+        }
+
+        int wrong_guesses = 0;
+        int won = 0;
+
+        // Guessing loop
+
+        while (wrong_guesses < 3 && won == 0)
+        {
+            char guess;
+
+            printf("\nWord: ");
+
+            for (int i = 0; i < len; i++)
+            {
+                printf("%c ", guess_output[i]);
+            }
+
+            printf("\n");
+
+            // Get player's guess
+
+            printf("Enter the letter you want to guess: ");
+            scanf(" %c", &guess);
+
+            // Check the guess
+
+            int found = check_guess(word, guess_output, guess, len);
+
+            if (found == 1)
+            {
+                printf("Correct guess!\n");
+            }
+            else
+            {
+                wrong_guesses++;
+
+                printf("Incorrect guess!\n");
+                printf("Wrong guesses: %d/3\n", wrong_guesses);
+            }
+
+            // Check if the player won
+
+            won = check_win(guess_output, len);
+        }
+
+        // Display result
+
+        if (won == 1)
+        {
+            winLose(1);
+        }
+        else
+        {
+            winLose(0);
+
+            printf("The word was: ");
+
+            for (int i = 0; i < len; i++)
+            {
+                printf("%c", word[i]);
+            }
+
+            printf("\n");
+        }
+
+        // Ask if player wants to play again
+
+        printf("\nDo you want to guess another word? (y/n): ");
+        scanf(" %c", &again);
+
+    } while (again == 'y' || again == 'Y');
+
+    printf("\nThanks for playing!\n");
+
+    return 0;
+}
+
+
+
+/*
+    Checks whether the guessed letter is in the word.
+    If it is found, the letter is revealed.
+*/
+
+
+int check_guess(char word[], char guess_res[],
+                char guess, int len)
+{
+    int found = 0;
+
+    for (int i = 0; i < len; i++)
+    {
+        if (guess == word[i])
+        {
+            guess_res[i] = word[i];
+            found = 1;
+        }
+    }
+
+    return found;
+}
+
+
+
+/*
+    Checks if there are any '-' characters left.
+    If there are none, the player has won.
+*/
+
+
+int check_win(char guess_res[], int len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (guess_res[i] == '-')
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+
+
+/*
+    Asks the player to select a word from 1-10.
+    Copies the selected word and calculates its length.
+*/
+
+
+int get_guess_word(char lib[][15], char word[])
+{
+    int r;
+
+    do
+    {
+        printf("Enter a number between 1 and 10: ");
+        scanf("%d", &r);
+
+    } while (r < 1 || r > 10);
+
+    // Convert user's 1-10 choice to array index 0-9
+    r--;
+
+    int len = 0;
+
+    for (int i = 0; i < 15; i++)
+    {
+        if (lib[r][i] != '-')
+        {
+            word[i] = lib[r][i];
+            len++;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return len;
+}
+
+
+
+/*
+    Displays the win or lose message.
+*/
+
+
+void winLose(int won)
+{
+    if (won == 1)
+    {
+        printf("\n********************************\n");
+        printf("          YOU WIN!\n");
+        printf("********************************\n");
+    }
+    else
+    {
+        printf("\n********************************\n");
+        printf("          YOU LOSE!\n");
+        printf("********************************\n");
+    }
+}
+
+
+
+
+/*
+    
+
+    FIXES I MADE FROM THE ORIGINAL CODE:
+
+    - Fixed the broken printf() welcome message.
+    - Changed print() to printf().
+    - Fixed the winLose() parameter by giving it a type.
+    - Fixed len starting at 1 instead of 0.
+    - Fixed the word 10 array-index problem by using r--.
+    - Fixed points increasing for every incorrect letter.
+    - Removed the unconditional break that stopped the game
+      after the first guess.
+    - Removed variables in winLose() that were not accessible
+      from that function.
+    - Fixed the win condition.
+    
+
+*/
