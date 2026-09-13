@@ -20,5 +20,5 @@ A Terminal-based hangman game written in C. This project was originally built du
 14. Removed unnecessary header files; only stdio.h was really needed.
 
 #Key Takeaways
--Gained experience tracing and debugging logic post-event
--Learned the constraints of coming up with ideas and then quickly executing it under tight hackathon timeframes.
+*Gained experience tracing and debugging logic post-event
+*Learned the constraints of coming up with ideas and then quickly executing it under tight hackathon timeframes.
