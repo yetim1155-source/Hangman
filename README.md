@@ -17,7 +17,7 @@ A Terminal-based hangman game written in C. This project was originally built du
 11. Fixed the game loop so it continues until the player wins or reaches 3 incorrect guesses.
 12. Added display of the current guess_output before each guess.
 13. Fixed replay logic to accept both y and Y.
-14. Removed unnecessary header files; only stdio.h was really needed.
+14. Removed unnecessary header files. Only stdio.h was really needed.
 
 #Key Takeaways
 
